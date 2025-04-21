@@ -1,0 +1,32 @@
+
+<h1>{{ question.question_text }}</h1>
+<ul>
+{% for choice in question.choice_set.all %}
+    <li>{{ choice.choice_text }}</li>
+{% endfor %}
+</ul>
+
+<!-- This is the detail page for a specific poll question. It displays the question text, the choices available, and the number of votes each choice has received. It also includes a form for users to vote on their preferred choice. 
+
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ question.question_text }}</title>
+</head>
+<body>
+    <h1>{{ question.question_text }}</h1>
+    <ul>
+        {% for choice in question.choice_set.all %}
+            <li>{{ choice.choice_text }} - {{ choice.votes }} votes</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'polls:index' %}">Back to Polls</a>
+    <form action="{% url 'polls:vote' question.id %}" method="post">
+        {% csrf_token %}
+        {% for choice in question.choice_set.all %}
+            <input type="radio" name="choice" value="{{ choice.id }}">{{ choice.choice_text }}<br>
+        {% endfor %}
+</body>
+</html>
+-->
