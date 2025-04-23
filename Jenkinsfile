@@ -1,55 +1,35 @@
 pipeline {
-    agent any  // Runs on any available agent
+    agent any
 
     environment {
-        DOCKER_IMAGE = "kbhola001/simple-webpage"
-        DOCKER_CREDENTIALS = "docker-hub-credentials"  // Stored in Jenkins credentials
+        EC2_USER = "ec2-user"  // Or ubuntu, depending on your AMI
+        EC2_HOST = "your.ec2.ip.address"
+        EC2_KEY = credentials('ec2-ssh-private-key')  // Jenkins credential with SSH private key
+        PROJECT_DIR = "/home/ec2-user/my-django-app"  // Path to your Django app
+    }
+
+    triggers {
+        githubPush()  // Enables webhook triggering
     }
 
     stages {
-        stage('Clone Repository') {
-            steps {
-                git branch: 'master', url: 'https://github.com/kestonbhola/moregithublessons.git'
-            }
-        }
-
-        stage('Build Docker Image') {
+        stage('Update Code on EC2') {
             steps {
                 script {
-                    docker.build("${DOCKER_IMAGE}:latest")
-                }
-            }
-        }
-
-        stage('Login to Docker Hub') {
-            steps {
-                script {
-                    docker.withRegistry('https://registry-1.docker.io/v2/', DOCKER_CREDENTIALS) {
-                        echo "Logged in to Docker Hub"
+                    // Use SSH to run commands on the EC2 instance
+                    sshagent (credentials: ['ec2-ssh-private-key']) {
+                        sh """
+                        ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} '
+                            cd ${PROJECT_DIR}
+                            git pull origin master
+                            source venv/bin/activate
+                            pip install -r requirements.txt
+                            python manage.py migrate
+                            python manage.py collectstatic --noinput
+                            sudo systemctl restart gunicorn
+                        '
+                        """
                     }
-                }
-            }
-        }
-
-        stage('Push Image to Docker Hub') {
-            steps {
-                script {
-                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS) {
-                        docker.image("${DOCKER_IMAGE}:latest").push()
-                    }
-                }
-            }
-        }
-
-        stage('Deploy Container') {
-            steps {
-                script {
-                    // Stop running container (if exists)
-                    sh "docker stop my-webpage-container || true"
-                    sh "docker rm my-webpage-container || true"
-
-                    // Run the new container
-                    sh "docker run -d --name my-webpage-container -p 80:80 ${DOCKER_IMAGE}:latest"
                 }
             }
         }
@@ -57,10 +37,10 @@ pipeline {
 
     post {
         success {
-            echo 'Deployment Successful!'
+            echo "Code updated and app restarted successfully on EC2!"
         }
         failure {
-            echo 'Deployment Failed!'
+            echo "Deployment failed."
         }
     }
 }
