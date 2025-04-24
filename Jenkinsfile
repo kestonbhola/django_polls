@@ -5,7 +5,7 @@ pipeline {
         EC2_USER = "ubuntu"  // Or ubuntu, depending on your AMI
         EC2_HOST = "ip-172-31-95-3"
         EC2_KEY = credentials('ec2-ssh-private-key')  // Jenkins credential with SSH private key
-        PROJECT_DIR = "/home/ec2-user/my-django-app"  // Path to your Django app
+        PROJECT_DIR = "/home/ubuntu/pytests/django_polls"  // Path to your Django app
     }
 
     //triggers {
@@ -22,7 +22,7 @@ pipeline {
                         sh """
                         ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} '
                             cd ${PROJECT_DIR}
-                            git pull origin master
+                            git pull origin main
                             source venv/bin/activate
                             pip install -r requirements.txt
                             python manage.py migrate
