@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     
-    stage('Pre-check') {
+    stages('Pre-check') {
         steps {
             echo "Pipeline reached pre-check stage."
         }
