@@ -11,7 +11,12 @@ pipeline {
     //triggers {
       //  githubPush()  // Enables webhook triggering
     //}
-
+    stage('Pre-check') {
+        steps {
+            echo "Pipeline reached pre-check stage."
+        }
+    }
+    
     stages {
         stage('Update Code on EC2') {
             steps {
