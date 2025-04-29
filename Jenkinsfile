@@ -16,7 +16,7 @@ pipeline {
         stage('Update Code on EC2') {
             steps {
                 script {
-                     echo 'Hello5'
+                     echo 'Hello 15'
                     // Use SSH to run commands on the EC2 instance
                     sshagent (credentials: ['ec2-ssh-private-key']) {
                         sh """
