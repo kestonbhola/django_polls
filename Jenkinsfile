@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         EC2_USER = "ubuntu"  // Or ubuntu, depending on your AMI
-        EC2_HOST = "44.213.102.243"
+        EC2_HOST = "3.239.19.3"
         EC2_KEY = credentials('ec2-ssh-private-key')  // Jenkins credential with SSH private key
         PROJECT_DIR = "/home/ubuntu/pytests/django_polls"  // Path to your Django app
     }
@@ -16,7 +16,6 @@ pipeline {
         stage('Update Code on EC2') {
             steps {
                 script {
-                     echo 'Hello 15'
                     // Use SSH to run commands on the EC2 instance
                     sshagent (credentials: ['ec2-ssh-private-key']) {
                         sh """
