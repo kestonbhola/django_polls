@@ -23,7 +23,7 @@ pipeline {
                         ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} '
                             cd ${PROJECT_DIR}
                             git pull origin main
-                            source venv/bin/activate
+                            source comp314/bin/activate
                             pip install -r requirements.txt
                             python manage.py migrate
                             python manage.py collectstatic --noinput
