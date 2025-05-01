@@ -30,7 +30,7 @@ FROM nginx:alpine as final
 # Step 9: Copy over the necessary files
 COPY --from=base /app /app
 COPY nginx.conf /etc/nginx/nginx.conf
-COPY --from=base /app/static /usr/share/nginx/html/
+COPY --from=base /app/staticfiles /usr/share/nginx/html/
 
 # Step 10: Expose port 80 for Nginx
 EXPOSE 80
