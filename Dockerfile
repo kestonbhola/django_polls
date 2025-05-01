@@ -22,7 +22,7 @@ COPY . /app/
 
 # Step 7: Run Django migrations and collect static files
 RUN python manage.py migrate
-RUN python manage.py collectstatic --noinput
+#RUN python manage.py collectstatic --noinput
 
 # Step 8: Install Nginx and configure the static files for Nginx
 FROM nginx:alpine as final
