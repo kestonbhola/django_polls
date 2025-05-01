@@ -17,7 +17,7 @@ dist/
 
 # Logs and databases
 *.log
-*.sqlite3
+#*.sqlite3
 *.db
 
 # VS Code settings (if you use it)
