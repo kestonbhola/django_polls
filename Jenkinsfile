@@ -50,7 +50,7 @@ pipeline {
                             docker pull ${DOCKER_IMAGE}:latest
                             docker stop django-container || true
                             docker rm django-container || true
-                            docker run -d --name django-container -p 80:8000 ${DOCKER_IMAGE}:latest
+                            docker run -d --name django-container -p 80:80 ${DOCKER_IMAGE}:latest
                         '
                         """
                     }
