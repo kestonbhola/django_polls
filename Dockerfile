@@ -25,7 +25,7 @@ RUN python manage.py migrate
 RUN python manage.py collectstatic --noinput
 
 # Step 8: Install Nginx and configure the static files for Nginx
-#FROM nginx:alpine as final
+FROM nginx:alpine as final
 
 # Step 9: Copy over the necessary files
 COPY --from=base /app /app
@@ -38,4 +38,4 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 
 # Step 11: Set the command to run Gunicorn and Nginx
-CMD gunicorn --bind 127.0.0.1:8000 myproject.wsgi:application & nginx -g "daemon off;"
+CMD gunicorn --bind 127.0.0.1:8000 hello_world.wsgi:application & nginx -g "daemon off;"
