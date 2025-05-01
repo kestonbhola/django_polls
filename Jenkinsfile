@@ -30,17 +30,7 @@ pipeline {
             }
         }
 
-        stage('Login to Docker Hub') {
-            steps {
-                script {
-                    docker.withRegistry('https://registry-1.docker.io/v2/', DOCKER_CREDS) {
-                        echo "You are logged in to Docker Hub"
-                    }
-                }
-            }
-        }
-
-        stage('Push Image to Docker Hub') {
+        stage('Push to Docker Hub') {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v2/', DOCKER_CREDS) {
