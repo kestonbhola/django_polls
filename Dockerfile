@@ -1,5 +1,5 @@
 # Step 1: Use an official Python image to build the application
-FROM python:3.9-slim as base
+FROM python:3.13.3-slim as base
 
 # Step 2: Set environment variables for Python to ensure no buffering
 ENV PYTHONUNBUFFERED 1
