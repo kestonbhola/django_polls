@@ -34,7 +34,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v2/', DOCKER_CREDS) {
-                        docker.image("${DOCKER_IMAGE}:latest").push
+                        docker.image("${DOCKER_IMAGE}:latest").push()
                     }
                 }
             }
