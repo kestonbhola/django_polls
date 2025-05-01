@@ -33,7 +33,7 @@ pipeline {
         stage('Push to Docker Hub') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v2/', DOCKER_CREDS) {
+                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDS) {
                         docker.image("${DOCKER_IMAGE}:latest").push()
                         echo "Image pushed to Docker Hub"
                     }
