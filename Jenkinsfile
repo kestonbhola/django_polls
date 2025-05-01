@@ -5,7 +5,7 @@ pipeline {
         EC2_USER = "ubuntu"  // Or ubuntu, depending on your AMI
         EC2_HOST = "34.201.25.109"
         EC2_KEY = credentials('ec2-ssh-private-key')  // Jenkins credential with SSH private key
-        PROJECT_DIR = "/home/ubuntu/pytests"  // Path to your Django app
+        PROJECT_DIR = "/home/ubuntu/pytests/django_polls"  // Path to your Django app
         
     }
 
@@ -22,7 +22,7 @@ pipeline {
                         sh """
                         ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} '
                             cd ${PROJECT_DIR}
-                            git clone https://github.com/kestonbhola/django_polls.git
+                            git pull origin https://github.com/kestonbhola/django_polls.git .
                             python3 -m venv comp314
                             source comp314/bin/activate
                             pip install -r requirements.txt
