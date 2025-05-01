@@ -1,41 +1,35 @@
-# Step 1: Use an official Python image to build the application
+# Step 1: Build stage with Python and Gunicorn
 FROM python:3.13.3-slim as base
 
-# Step 2: Set environment variables for Python to ensure no buffering
 ENV PYTHONUNBUFFERED 1
 
-# Step 3: Install dependencies for the project
 RUN apt-get update && apt-get install -y \
     libpq-dev \
     build-essential \
+    nginx \
     && rm -rf /var/lib/apt/lists/*
 
-# Step 4: Set up the working directory inside the container
 WORKDIR /app
 
-# Step 5: Copy requirements.txt and install the dependencies
 COPY requirements.txt /app/
 RUN python3 -m pip install --no-cache-dir -r requirements.txt
 
-# Step 6: Copy the entire project into the container
+# Ensure gunicorn is installed (if not already in requirements.txt)
+RUN python3 -m pip install gunicorn
+
 COPY . /app/
 
-# Step 7: Run Django migrations and collect static files
 RUN python manage.py migrate
 RUN python manage.py collectstatic --noinput
 
-# Step 8: Install Nginx and configure the static files for Nginx
-FROM nginx:alpine as final
+# Set Django settings module
+ENV DJANGO_SETTINGS_MODULE=hello_world.settings
 
-# Step 9: Copy over the necessary files
-COPY --from=base /app /app
-COPY nginx.conf /etc/nginx/nginx.conf
-COPY --from=base /app/staticfiles /usr/share/nginx/html/
-# Copy Nginx config to correct path
+# Copy Nginx config to the correct path
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Step 10: Expose port 80 for Nginx
+# Expose HTTP port
 EXPOSE 80
 
-# Step 11: Set the command to run Gunicorn and Nginx
-CMD gunicorn --bind 127.0.0.1:8000 hello_world.wsgi:application & nginx -g "daemon off;"
+# Step 2: Run Gunicorn and Nginx together
+CMD sh -c "gunicorn --chdir /app hello_world.wsgi:application --bind 127.0.0.1:8000 & nginx -g 'daemon off;'"
