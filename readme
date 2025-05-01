@@ -1,1 +1,5 @@
 Created to teach Django deployment using Jenkins on AWS.
+
+Admin interface credentials
+username: admin
+password: comp314
