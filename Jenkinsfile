@@ -48,8 +48,8 @@ pipeline {
                         sh """
                         ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} '
                             docker pull ${DOCKER_IMAGE}:latest
-                            docker stop django-container || true
-                            docker rm django-container || true
+                            docker ps -a -q -f name=django-container | grep -q . && docker stop django-container || true
+                            docker ps -a -q -f name=django-container | grep -q . && docker rm django-container || true
                             docker run -d --name django-container -p 80:80 ${DOCKER_IMAGE}:latest
                         '
                         """
