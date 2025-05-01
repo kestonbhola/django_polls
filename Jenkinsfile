@@ -51,6 +51,9 @@ pipeline {
                             docker ps -a -q -f name=django-container | grep -q . && docker stop django-container || true
                             docker ps -a -q -f name=django-container | grep -q . && docker rm django-container || true
                             docker run -d --name django-container -p 80:80 ${DOCKER_IMAGE}:latest
+                            sleep 5
+                            docker ps -a
+                            docker logs django-container || true
                         '
                         """
                     }
